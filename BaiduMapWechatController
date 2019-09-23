@@ -129,7 +129,7 @@ public class BaiduMapWechatController extends JsonBasedController {
 		map.put("pageTotal", pagelist.getTotalPages());
 		resp.setCode(GlobalCode.RESULT_CODE_0000);
 		resp.setData(map);
-		resp.setDesc("操作成功");
+		resp.setDesc("操作成功2");
 		printJson(JSON.toJSONString(resp), response);
 	}
 	
