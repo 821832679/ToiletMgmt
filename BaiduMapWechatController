@@ -1,0 +1,137 @@
+package com.wentiyun.wechat;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.wentiyun.common.GlobalCode;
+import com.wentiyun.common.GlobalConstant;
+import com.wentiyun.common.JsonBasedController;
+import com.wentiyun.common.response.Data;
+import com.wentiyun.common.response.DataSuccess;
+import com.wentiyun.pojo.ShopStore;
+import com.wentiyun.pojo.vo.ShopStoreVo;
+import com.wentiyun.service.ShopStoreService;
+import com.wentiyun.utils.GlobalProperties;
+
+/**
+ * 地图业务相关
+ * 
+ * @author
+ */
+@Controller
+@RequestMapping("/mapWechat")
+public class BaiduMapWechatController extends JsonBasedController {
+	@Autowired
+	private ShopStoreService shopStoreService;
+	
+	@RequestMapping("/location")
+	public void location(@RequestParam String id , HttpServletResponse response) {
+		Map<String, Object> outmap=new HashMap<String, Object>();
+		Data resp=new DataSuccess();
+		
+		String title = "位置";
+		String lat = null;
+		String lng = null;
+		ShopStore store = shopStoreService.findOne(id);
+		if (store != null) {
+			title = store.getAddress();
+			if (store.getLat() != null) {
+				lat = store.getLat();
+			}
+			if (store.getLng() != null) {
+				lng = store.getLng();
+			}
+		}
+		outmap.put("baidu_ak", GlobalProperties.getProperty("baidu_map_ak"));
+		outmap.put("title", title);
+		outmap.put("lat", lat);
+		outmap.put("lng", lng);
+
+		resp.setCode(GlobalCode.RESULT_CODE_0000);
+		resp.setData(outmap);
+		resp.setDesc("操作成功");
+		
+		printJson(JSON.toJSONString(resp), response);
+	}
+	
+	@RequestMapping("/index")
+	public void index(HttpServletResponse response) {
+		Map<String, Object> outmap=new HashMap<String, Object>();
+		Data resp=new DataSuccess();
+		outmap.put("baidu_ak", GlobalProperties.getProperty("baidu_map_ak"));
+		
+		resp.setCode(GlobalCode.RESULT_CODE_0000);
+		resp.setData(outmap);
+		resp.setDesc("操作成功");
+		
+		printJson(JSON.toJSONString(resp), response);
+	}
+	
+	/**
+	 * 查询场馆列表2 ,所有场馆 V3.0
+	 * 
+	 * @param categoryId
+	 * @param pageNum
+	 * @param numPerPage
+	 * @param response
+	 */
+	@RequestMapping("/listAll")
+	public void venueListAjax(@RequestParam(defaultValue = "1") int pageNum,
+			@RequestParam(defaultValue = "10") int numPerPage,
+			@RequestParam(required = false) Double gpsLat,
+			@RequestParam(required = false) Double gpsLng,
+			@RequestParam(required = false) String name,
+			@RequestParam(required = false) String typeID,
+			HttpServletResponse response) {
+		Data resp = new DataSuccess();
+		// 排序分页
+		Sort sort = new Sort(Sort.Direction.DESC, "sortvalue");
+		Pageable pageable = new PageRequest(pageNum, numPerPage, sort);
+		ShopStore shopStore=new ShopStore();
+		shopStore.setTypeID(typeID);
+		shopStore.setName(name);
+		Page<?> pagelist = shopStoreService.getShopStoreListByCondition(shopStore, pageable);
+		List<Object> pageContent = (List<Object>) pagelist.getContent();
+		List<ShopStoreVo> list = new ArrayList<ShopStoreVo>();
+		for (int i = 0; i < pageContent.size(); i++) {
+			ShopStore ss = (ShopStore) pageContent.get(i);
+			ShopStoreVo vo = new ShopStoreVo();
+			vo.setId(ss.getId());
+			vo.setName(ss.getName());
+			vo.setAddress(ss.getAddress());
+			vo.setLat(ss.getLat());
+			vo.setLng(ss.getLng());
+			vo.setImgurl(ss.getImgurl());
+			vo.setTypeID(ss.getTypeID());
+			vo.setIsdel(ss.getIsdel());
+			list.add(vo);
+		}
+		
+		Map map = new HashMap();
+		map.put("content", list);
+		map.put("pageNum", pagelist.getNumber());
+		map.put("pageTotal", pagelist.getTotalPages());
+		resp.setCode(GlobalCode.RESULT_CODE_0000);
+		resp.setData(map);
+		resp.setDesc("操作成功");
+		printJson(JSON.toJSONString(resp), response);
+	}
+	
+	
+}
