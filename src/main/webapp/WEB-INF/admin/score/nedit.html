@@ -1,0 +1,362 @@
+#include("/common/include/pageTitleBread.html")
+<form id="editForm" class="panel-body form-horizontal form-padding">
+<input type="hidden"  name="answer.id" class="form-control" value="#(t?t.id:'')">
+<input type="hidden"  name="answer.topicid" class="form-control" value="#(topicid?topicid:'')">
+<div id="page-content">
+		<div class="col-lg-12">
+	        <div class="panel">
+	            <div class="panel-heading">
+	                <h3 class="panel-title">基本情况</h3>
+	            </div>
+            	<div class="form-group"></div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">厕所编号</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.code" class="form-control" readonly="readonly" value="#(t?t.code:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">厕所类别</label>
+                    <div class="col-md-3">
+                        <select name="answer.toiletype" class="form-control" disabled="disabled">
+							<option value="1" #if(t&&t.toiletype == "固定" ) selected="selected" #else  #end >固定</option>
+							<option value="0" #if(t&&t.toiletype == "移动" ) selected="selected" #else  #end >移动</option>
+						</select>
+                    </div>
+                </div>
+                <div class="form-group">
+                	<label class="col-md-2 control-label" for="demo-text-input">项目名称</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.name" class="form-control" readonly="readonly" value="#(t?t.name:'')">
+                        <!-- <small class="help-block">请输入字段名称(即该栏目的英文名称)</small> -->
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">项目类别</label>
+                    <div class="col-md-3">
+						<select name="answer.type" class="form-control" disabled="disabled">
+							#for(tt : topictype)
+				 				<option value="#(tt.name)" >#(tt.name)</option>
+							#end
+						</select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">业主单位</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.unit" class="form-control" readonly="readonly" value="#(t?t.unit:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">省份</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.province" class="form-control" readonly="readonly" value="#(t?t.province:'')">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">市州</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.city" class="form-control" readonly="readonly" value="#(t?t.city:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">地区</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.district" class="form-control" readonly="readonly" value="#(t?t.district:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">详细地址</label>
+                    <div class="col-md-8">
+                        <input type="text"  name="answer.address" class="form-control" readonly="readonly" value="#(t?t.address:'')">
+                    </div>
+                </div>
+                
+                <div class="panel-heading">
+	                <h3 class="panel-title">建设情况</h3>
+	            </div>
+	            <div class="form-group"></div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">厕所性质</label>
+                    <div class="col-md-3">
+                        <select name="answer.nature" class="form-control" disabled="disabled">
+							<option value="新建" #if(t&&t.nature == "新建" ) selected="selected" #else  #end >新建</option>
+							<option value="改建" #if(t&&t.nature == "改建" ) selected="selected" #else  #end >改建</option>
+						</select>
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">拟建等级</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.level" class="form-control" readonly="readonly" value="#(t?t.level:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">计划开工日期</label>
+                    <div class="col-md-3">
+                        <input type="text" id="begintime" name="answer.begintime" readonly="readonly" class="form-control" value="#(t?t.begintime:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">计划完工日期</label>
+                    <div class="col-md-3">
+                        <input type="text" id="endtime" name="answer.endtime" readonly="readonly" class="form-control" value="#(t?t.endtime:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">实际开工日期</label>
+                    <div class="col-md-3">
+                        <input type="text" id="startime" name="answer.startime" readonly="readonly" class="form-control" value="#(t?t.startime:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">实际完工日期</label>
+                    <div class="col-md-3">
+                        <input type="text" id="cleantime" name="answer.cleantime" readonly="readonly" class="form-control" value="#(t?t.cleantime:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">所属年份</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.year" class="form-control" readonly="readonly" value="#(t?t.year:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">厕所面积</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.areas" class="form-control" readonly="readonly" value="#(t?t.areas:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">计划投资额(元)</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.planned" class="form-control" readonly="readonly" value="#(t?t.planned:'0')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">实际投资额(元)</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.ramount" class="form-control" readonly="readonly" value="#(t?t.ramount:'0')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">计划政府补贴(元)</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.subsidy" class="form-control" readonly="readonly" value="#(t?t.subsidy:'0')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">实际政府补贴(元)</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.samount" class="form-control" readonly="readonly" value="#(t?t.samount:'0')">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">中央补贴(元)</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.zysubsidy" readonly="readonly" class="form-control"  value="#(t?t.zysubsidy:'0')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">省财政补贴(元)</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.ssubsidy" readonly="readonly" class="form-control"  value="#(t?t.ssubsidy:'0')">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">总投资(元)</label>
+                    <div class="col-md-8">
+                        <input type="text"  name="answer.totalinvest" readonly="readonly" class="form-control"  value="#(t?t.totalinvest:'0')">
+                    </div>
+                </div>
+                
+                <div class="panel-heading">
+	                <h3 class="panel-title">使用情况</h3>
+	            </div>
+	            <div class="form-group"></div>
+	            <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">男厕位数量</label>
+                    <div class="col-md-3">
+                        <input type="number"  name="answer.menum" class="form-control" min="0" step="1" readonly="readonly" value="#(t?t.menum:'0')" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">女厕位数量</label>
+                    <div class="col-md-3">
+                        <input type="number"  name="answer.womanum" class="form-control" min="0" step="1" readonly="readonly" value="#(t?t.womanum:'0')" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">无障碍厕位数量</label>
+                    <div class="col-md-3">
+                        <input type="number"  name="answer.barriernum" class="form-control" min="0" readonly="readonly" step="1" value="#(t?t.barriernum:'0')" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">第三卫生间数量</label>
+                    <div class="col-md-3">
+                        <input type="number"  name="answer.threenum" class="form-control" min="0" step="1" readonly="readonly" value="#(t?t.threenum:'0')" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">男女通用厕位数量</label>
+                    <div class="col-md-3">
+                        <input type="number"  name="answer.currencynum" class="form-control" min="0" step="1" readonly="readonly" value="#(t?t.currencynum:'0')" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">是否标注</label>
+                    <div class="col-md-3">
+                        <select name="answer.istag" class="form-control" disabled="disabled">
+							<option value="是" #if(t&&t.istag == "是" ) selected="selected" #else  #end >是</option>
+							<option value="否" #if(t&&t.istag == "否" ) selected="selected" #else  #end >否</option>
+						</select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">经度</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.longitude" class="form-control" readonly="readonly" value="#(t?t.longitude:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">纬度</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.latitude" class="form-control" readonly="readonly" value="#(t?t.latitude:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                	<label class="col-md-2 control-label" for="demo-text-input">厕所图片</label>
+                	<div class="col-md-10">
+                		<p id="uploadFile">
+                			
+                		</p>
+                		<input type="hidden" id="rid" name="answer.rid" value="#(t?t.rid:'')">
+                		<input type="hidden" id="rpath" name="answer.rpath" value="#(t?t.rpath:'')">
+	                	<!-- <input type='file' accept=".jpeg,.tif,.jpg,.png,.bmp,.pic" class='btn btn-info data-toolbar' id='fileText' name='fileText' placeholder='请选择文件' style='display: inline;'/>
+	                	<a class='btn btn-info data-toolbar' href='javascript:void(0)' onclick="uploadFile()" >上传</a> -->
+                	</div>
+                </div>
+                
+                <div class="panel-heading">
+	                <h3 class="panel-title">管理情况</h3>
+	            </div>
+	            <div class="form-group"></div>
+	            <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">管理形式</label>
+                    <div class="col-md-3">
+                        <select name="answer.manages" class="form-control" disabled="disabled">
+							<option value="1" #if(t&&t.manages == "自管" ) selected="selected" #else  #end >自管</option>
+							<option value="0" #if(t&&t.manages == "委托管理" ) selected="selected" #else  #end >委托管理</option>
+						</select>
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">完成情况</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.state" class="form-control" readonly="readonly" value="#(t?t.state:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">评定等级</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.pinlevel" class="form-control" readonly="readonly" value="#(t?t.pinlevel:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">评定时间</label>
+                    <div class="col-md-3">
+                        <input type="text" name="answer.pindate" readonly class="form-control" readonly="readonly" value="#(t?t.pindate:'')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">管理单位</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.manageunit" readonly="readonly" class="form-control"  value="#(t?t.manageunit:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">管理人员</label>
+                    <div class="col-md-3">
+                        <input type="text" name="answer.manageinfo" readonly="readonly" class="form-control" value="#(t?t.manageinfo:'')">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">管理人员联系方式</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.managetel" readonly="readonly" class="form-control"  value="#(t?t.managetel:'')">
+                    </div>
+                    <label class="col-md-2 control-label" for="demo-text-input">维护人员</label>
+                    <div class="col-md-3">
+                        <input type="text" name="answer.defender" readonly="readonly" class="form-control" value="#(t?t.defender:'')">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">维护人员电话</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.defendertel" readonly="readonly" class="form-control"  value="#(t?t.defendertel:'')">
+                    </div>
+                    
+                    <label class="col-md-2 control-label" for="demo-text-input">评定单位</label>
+                    <div class="col-md-3">
+                        <input type="text"  name="answer.pinunit" readonly="readonly" class="form-control"  value="#(t?t.pinunit:'')">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="demo-text-input">评定意见</label>
+                    <div class="col-md-8">
+                    	<textarea name="answer.pinopinion" class="form-control" readonly="readonly" rows="6" cols="30">
+                    	</textarea>
+                    </div>
+                </div>
+                
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-9 col-sm-offset-3">
+                        	<label class="col-md-2 control-label" for="demo-text-input">选择审核状态</label>
+                        	<select name="answer.evaluate" class="form-control" style="width: 200px; float:left; margin-right:20px;">
+                        		<option value="验收通过" #if(t&&t.evaluate == "验收通过" ) selected="selected" #else  #end >验证通过</option>
+                        		<option value="验收不通过" #if(t&&t.evaluate == "验收不通过" ) selected="selected" #else  #end >验证不通过</option>
+							</select>
+                        	
+                            <button class="btn btn-mint" type="submit" >保存</button>
+                            
+                        </div>
+                    </div>
+                </div>
+	        </div>
+	    </div>
+</div>
+<div class="modal fade" id="loadingModal">
+	<div style="width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 20%;margin-left:-100px;margin-top:-10px">
+		<h5 style="color: #e81f08;margin-bottom: 2px;">图片上传中...</h5>
+		<div class="progress progress-striped active" style="margin-bottom: 0;">
+			<div class="progress-bar" style="width: 100%;"></div>
+		</div>
+	</div>
+</div>
+</form>
+<script>
+	function save(){
+
+		var data = common_ajax.ajaxFunc("/admin/score/save", $('#editForm').serialize(), "json", null);
+		if(data.success){
+			pointLion.alertMsg("保存成功!" , "success" , "small" , function(){
+				doPjax(ctx+'/admin/score/getListPage?topicid=#(topicid?topicid:'')');//跳转到列表页
+			});
+		}
+	}
+	$(document).ready(function() {
+		var type = "#(t?t.type:'')";
+		if(type != ""){
+			$("select[name='answer.type']").find('option[value="'+type+'"]').attr('selected','selected');
+		}
+		
+		var rpath = $("#rpath").val();
+		if(rpath!=null && rpath!=""){
+			var paths = rpath.split(",");
+			var rids = $("#rid").val().split(",");
+			var html = "";
+			for(var i in rids){
+				var href = "#(ctx)/admin/resources/downFile?rid="+rids[i];
+				html += "<div style='width: 200px; float: left;' id='file"+rids[i]+"'><a href='" + href + "' target='_blank' title='点击查看原图' >"+
+				"<img style='width:100px;height:100px' src='"+paths[i]+"'/></a></div>";
+			}
+    		$("#uploadFile").html(html);
+		}
+		
+		$('#editForm').bootstrapValidator({
+            fields: {
+            	"answer.code": {
+                    validators: {
+                        notEmpty: {
+                            message: '*厕所编号不能为空'
+                        }
+                    }
+                },
+                "answer.name": {
+                    validators: {
+                    	notEmpty: {
+                            message: '*项目名称不能为空'
+                        }
+                    }
+                }
+            }
+        }).on("success.form.bv", function (e) {
+            save();
+            return false;//阻止表单跳转
+        });
+	});
+	
+ 
+</script>

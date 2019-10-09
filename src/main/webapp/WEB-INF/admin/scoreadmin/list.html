@@ -1,0 +1,281 @@
+#include("/common/include/pageTitleBread.html")
+<div id="page-content">
+	<div class="col-sm-12 eq-box-sm">
+		<div class="panel lion-fullHeight">
+   			<div class="panel-body">
+   				<div style="text-align: center;">	     
+   					<select id="isperson" name="isperson" style="width: 100px;height: 25px;">
+   						<option value="1">已绑定</option>
+   						<option value="0">未绑定</option>
+   					</select>
+   					<input type="hidden" id="orgid"/> 
+					<input type="text" name="orgname" id="orgname"  placeholder="组织机构进行搜索" style="width: 150px;" readonly/> 
+					<span> 
+						<input id="orgbut" type="button" value="选择组织机构" data-toggle="modal" data-target="#myModal" />
+					</span>
+		             <input type="text" name="Searcht" id="Searcht" value="" placeholder="请输入项目编号、名称" style="width: 300px;"/>
+		             <span> <input type="button" value="搜索" onclick="onclicked()"/> </span>
+		             <span> <input type="button" value="数据导入" onclick="giveImport()"/> </span>
+			     </div>
+			    <a class="btn btn-info data-toolbar" onclick="refreshAnswerPersion()" href="javascript:void(0);"><i class="glyphicon glyphicon-plus"></i>刷新绑定</a>
+			    <a class="btn btn-info data-primary" onclick="bindingAll()" href="javascript:void(0);"><i class="glyphicon glyphicon-plus"></i>手动绑定用户</a>
+   				<table id="pageTable" class="demo-add-niftycheck" data-toolbar="#del,#add"
+		               data-search="true"
+		               data-show-refresh="true"
+		               data-show-toggle="true"
+		               data-show-columns="true"
+		               data-sort-name="id"
+		               data-page-list="[5, 10, 20]"
+		               data-page-size="5"
+		               data-pagination="true" data-show-pagination-switch="true" data-toggle="table">
+		               <tbody>
+		               </tbody>
+		         </table>
+		    </div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">组织机构</h4>
+            </div>
+            <div class="modal-body">
+            	<ul id="treeDemo" class="ztree"></ul>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script>
+	SearchValue='';
+	orgid='';
+	isperson='';
+	var col = [{
+		   field: 'checked',
+	       checkbox : true,
+	       align: 'center'
+	   },{
+		 field: 'code',
+		 title: '项目编号',
+	     align: 'center'
+	   },{
+		 field: 'name',
+		 title: '项目名称',
+	     align: 'center'
+	   },{
+		 field: 'type',
+		 title: '项目类别',
+	     align: 'center'
+	   },{
+		 field: 'district',
+		 title: '地区',
+	     align: 'center',
+	     formatter:function(value,row,index){
+	    	 return row.province+"-"+row.city+"-"+row.district;
+	     }
+	   },{
+		 field: 'address',
+		 title: '详细地址',
+	     align: 'center'
+	   },{
+		 field: 'evaluate',
+		 title: '验收状态',
+	     align: 'center'
+	   },{
+		 field: 'username',
+		 title: '绑定用户',
+	     align: 'center'
+	   }
+	   ,{
+		 field:'id',
+		 title: '操作',
+	     align: 'center',
+	     width:'150',
+	     formatter:function(value,row,index){
+	           //通过formatter可以自定义列显示的内容
+	           //value：当前field的值
+	           //row：当前行的数据
+	           var a = '<a class="label label-table label-success" onclick="doPjax(\''+ctx+'/admin/scoreadmin/getListByIDPage?id='+row.id+'\')" href="javascript:void(0);" >指标维护</a>';
+	           return a;
+	       } 
+	}]
+	var opt = {
+		       //是否显示行间隔色
+			   striped: true,
+			   //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）     
+			   cache: false,  
+			   //data-toolbar: "#demo-delete-row",
+			   //是否显示分页（*）  
+			   pagination: true,   
+			    //是否启用排序  
+			   sortable: false,    
+			    //排序方式 
+			   sortOrder: "asc",    
+			   //初始化加载第一页，默认第一页
+			   //我设置了这一项，但是貌似没起作用，而且我这默认是0,- -
+			   //pageNumber:1,   
+			   //每页的记录行数（*）   
+			   pageSize: 10,  
+			   //可供选择的每页的行数（*）    
+			   pageList: [10, 25, 50, 100],
+		       //这个接口需要处理bootstrap table传递的固定参数,并返回特定格式的json数据  
+			   url: ctx+"/admin/score/listData",
+				////查询参数,每次调用是会带上这个参数，可自定义                         
+			   queryParams : function(params) {
+			       return {
+			             pageNumber: ((params.offset+1)/params.limit)+1,
+			             pageSize: params.limit,
+			             SearchValue:SearchValue,
+			             orgid:orgid,
+			             isperson:isperson,
+			           };
+			   },
+			   //分页方式：client客户端分页，server服务端分页（*）
+			   sidePagination: "server",
+			   //是否显示搜索
+			   search: false,  
+			   //Enable the strict search.    
+			   strictSearch: true,
+			   //Indicate which field is an identity field.
+			   idField : "id",
+			   columns: col,
+			   pagination:true
+	};
+	
+	function initTable(){
+		$('#pageTable').bootstrapTable(opt);
+	}
+	function refreshTable(){
+		$("#pageTable").bootstrapTable('refresh', opt);
+	}
+	function onclicked(){
+		SearchValue = document.getElementById("Searcht").value;
+		orgid = document.getElementById("orgid").value;
+		isperson = document.getElementById("isperson").value;
+		opt.url = ctx+"/admin/score/listData";
+		refreshTable();
+	}
+	
+	function ondownload(){
+		var sValue = document.getElementById("Searcht").value;
+		var orgids = document.getElementById("orgid").value;
+		location.href = ctx+"/admin/scoreadmin/downloadExl?SearchValue="+sValue+"&orgid="+orgids;
+	}
+	
+	var setting = {
+		async : {
+			enable : true,
+			url : ctx + "/admin/login/getOrgTree"
+		},
+		callback : {
+			onClick : clickNode
+		}
+	};
+	
+	function clickNode(event, treeId, treeNode, clickFlag) {
+		$("#orgid").val(treeNode.id);
+		$("#orgname").val(treeNode.name);
+	}
+	
+	//刷星绑定
+	function refreshAnswerPersion(){
+		pointLion.confimMsg("系统会根据地区自动找到同名用户并绑定，是否执行？","small",function(){
+			var data = common_ajax.ajaxFunc("/admin/answer/refreshAnswerPersion", {}, "json", null);
+			if(data.success){
+				refreshTable();
+				pointLion.alertMsg("执行成功!已成功绑定"+data.message+"条数据" , "success" , "small" , null);
+			}
+		});
+	}
+	
+	//手动绑定
+	function bindingAll(){
+		var data = [];
+		$("#pageTable input[type='checkbox'][name!='btSelectAll']:checked").each(function(){
+			data.push($(this).val());
+		});
+		if(data.length==0){
+			pointLion.alertMsg("请选择要绑定的数据!","danger",null,null);
+			return;
+		}
+		doPjax('#(ctx)/admin/scoreadmin/bindingWeb?answerids='+data.join(","));
+	}
+	
+	//数据导入
+	var giveUserRoleIframe;
+	function giveImport() {
+		var url = ctx + '/admin/scoreadmin/importWeb?topicid=#(topicid)';
+		var index = layer
+				.open({
+					type : 2,
+					title : false, //不显示标题栏
+					area : [ '650px', '350px' ],
+					shade : 0.8,
+					id : 'giveUserRole', //设定一个id，防止重复弹出
+					resize : false,
+					closeBtn : false,
+					isOutAnim : false,
+					btn: ['确定', '取消'], 
+					btnAlign : 'c',
+					content : url,
+					success : function(layero) {
+						giveUserRoleIframe = window[layero.find('iframe')[0]['name']];
+					},
+					yes : function() {
+						var editForm = giveUserRoleIframe.subsave();
+						refreshTable();
+						layer.closeAll();
+					}
+				});
+	}
+	
+	//统计下载
+	var giveUserRoleIframe;
+	function giveDownload() {
+		var url = ctx + '/admin/scoreadmin/downloadWeb';
+		var index = layer
+				.open({
+					type : 2,
+					title : false, //不显示标题栏
+					area : [ '650px', '350px' ],
+					shade : 0.8,
+					id : 'giveUserRole', //设定一个id，防止重复弹出
+					resize : false,
+					closeBtn : false,
+					isOutAnim : false,
+					btn : [ '关闭' ],
+					btnAlign : 'c',
+					content : url,
+					success : function(layero) {
+						giveUserRoleIframe = window[layero.find('iframe')[0]['name']];
+					},
+					yes : function() {
+						var editForm = giveUserRoleIframe.subsave();
+						
+						layer.closeAll();
+					}
+				});
+	}
+
+	$(document).ready(function() {
+		initFullHeight();//初始化高度
+		initTable();//初始化表格
+		$.fn.zTree.init($("#treeDemo"), setting);//初始化树
+		
+		$("#isperson").change(function(){
+			if($(this).val()=="1"){
+				$("#orgname").show();
+				$("#orgbut").show();
+			}else{
+				$("#orgname").hide();
+				$("#orgbut").hide();
+			}
+		});
+	});
+</script>
